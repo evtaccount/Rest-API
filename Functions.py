@@ -1,4 +1,5 @@
 import json
+import time
 import socket
 import Classes
 
@@ -38,7 +39,40 @@ def get_notes():
             for n, item in enumerate(note_template.keys()):
                 current_note[item] = note[n]
             notes.append(current_note.copy())
+    print(notes)
     return notes
+
+
+def del_note(notes, selected_id):
+    for ind, note in enumerate(notes):
+        print("Wanted id ", selected_id)
+        print("Current note ", note)
+        if note["id"] == selected_id:
+            print("Deleted note ", notes.pop(ind))
+            print("Other ", notes)
+            save_notes(notes)
+            break
+
+
+def save_notes(notes_to_save):
+    with open("notes.txt", "w", encoding="utf-8") as f:
+        for ind, note in enumerate(notes_to_save):
+            tmp = []
+            for key in note:
+                tmp.append(note[key])
+            f.write(','.join(tmp) + '\n')
+
+
+def replace_not(note_list, new_note):
+    for note in note_list:
+        if new_note["id"] == note["id"]:
+            note["title"] = new_note["title"]
+            note["text"] = new_note["text"]
+            note["date_update"] = str(int(time.time()))
+            break
+    print("Note list: ", note_list)
+    save_notes(note_list)
+    return note_list
 
 
 def send_note(id="", title="", text="", date_create=0000000000, date_update=0000000000):
