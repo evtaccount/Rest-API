@@ -1,4 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import socket
+import time
 import json
 
 import Classes
@@ -12,8 +16,10 @@ def get_notes_from_db():
     data = json.loads(data)
 
     for ind, readed_note in enumerate(data):
-        print(ind + 1, ". Заголовок:    ", readed_note["title"])
-        print("    Текст заметки:", readed_note["text"], "\n")
+        print(ind + 1, ". Заголовок:      ", readed_note["title"])
+        print("    Текст заметки:  ", readed_note["text"])
+        print("    Дата создания:  ", time.ctime(int(readed_note["date_create"])))
+        print("    Дата изменения: ", time.ctime(int(readed_note["date_update"])), "\n")
         exp_list.append(readed_note["id"])
     return exp_list
 
@@ -47,6 +53,7 @@ while True:
     choosen_mode = int(input())
 
     if True:
+        #Создание заметки
         if choosen_mode == 1:
             title_input = ""
             text_input = ""
@@ -55,7 +62,7 @@ while True:
                 if len(title_input) > 30:
                     print("Ошибка ввода. Попробуйте ещё раз\n")
             while len(text_input) > 500 or len(text_input) == 0:
-                text_input = input("Введите текст заметки")
+                text_input = input("Введите текст заметки\nДлина заметки не должна превышать 500 символов")
                 if len(text_input) > 500:
                     print("Ошибка ввода. Попробуйте ещё раз\n")
 
@@ -67,8 +74,6 @@ while True:
 
         elif choosen_mode == 3:
             id_list = get_notes_from_db()
-            print(id_list)
-
             select_note = int(input("Укажите номер заметки для удаления - "))
             sock.send(Functions.send_note(id=id_list[select_note-1]))
 
@@ -85,22 +90,5 @@ while True:
     else:
         print("Некорректный ввод")
 
-# if data:
-#     sock.send(data.encode())
-#     data = sock.recv(1024)
-#     udata = json.loads(data.decode("utf-8"))
-#     print("Data is: ", udata)
-input()
-
-# while True:
-#     # data = input("Введите послание")
-#     data = json.dumps(note)
-#     if data:
-#         sock.send(data.encode())
-#         data = sock.recv(1024)
-#         # udata = data.decode()
-#         udata = json.loads(data.decode("utf-8"))
-#         print("Data is: ", data)
-#         # data = ""
 
 sock.close()

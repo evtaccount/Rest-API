@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import time
 import socket
@@ -13,6 +16,7 @@ note_template = {
 }
 
 
+#Функция записывает новую заметку в файл. В случае успеха возвращает True; если запись не выполнена - возвращает False
 def save_note(new_note):
     tmp = []
     for key in new_note:
@@ -20,16 +24,16 @@ def save_note(new_note):
     tmp = ','.join(tmp)
 
     try:
-        with open("notes.txt", "a") as f:
-            f.write('\n' + tmp)
-    except:
-        print(new_note)
         with open("notes.txt", "a", encoding='utf-8') as f:
             f.write('\n' + tmp)
+            print("Заметка успешно создана")
+            return True
+    except:
+        print("Ошибка записи")
+        return False
 
-    return True
 
-
+#Функция считывает из файла все заметки и возвращает список словарей
 def get_notes():
     notes = []
     current_note = {}
@@ -43,6 +47,7 @@ def get_notes():
     return notes
 
 
+#Функция принимает в качестве аргументов список словарей и id нужного словаря. Словарь с этим id удаляет из списка.
 def del_note(notes, selected_id):
     for ind, note in enumerate(notes):
         print("Wanted id ", selected_id)
@@ -54,6 +59,7 @@ def del_note(notes, selected_id):
             break
 
 
+#Принимает в качестве аргумента список словарей и записывает из в файл
 def save_notes(notes_to_save):
     with open("notes.txt", "w", encoding="utf-8") as f:
         for ind, note in enumerate(notes_to_save):
@@ -63,6 +69,8 @@ def save_notes(notes_to_save):
             f.write(','.join(tmp) + '\n')
 
 
+#Функция принимает в качестве аргументов список словарей и отредактированный словарь. Заменяет в списке в искомом
+#словаре "title" и "text" на новые. При этом обновляется "date_update". Возвращается отредактированный список словарей.
 def replace_not(note_list, new_note):
     for note in note_list:
         if new_note["id"] == note["id"]:
@@ -75,25 +83,9 @@ def replace_not(note_list, new_note):
     return note_list
 
 
+#Функция принимает заданные аршументы (незаданные остаются по дефолту) и формирует строку для передаяи по сети,
+#переводя в json и кодируя
 def send_note(id="", title="", text="", date_create=0000000000, date_update=0000000000):
     send_data = {"id": id, "title": title, "text": text, "date_create": date_create, "date_update": date_update}
     data = json.dumps(send_data).encode()
-    # socket.socket().send(data)
     return data
-    # try:
-    #     socket.socket().send(data)
-    #     return True
-    # except:
-    #     print("Ошибка")
-    #     return False
-
-
-def recieve_note(host, address):
-    data = b""
-    while not b"\r\n" in data:
-        tmp = host.recv(1024)
-        if not data:
-            break
-        else:
-            data += tmp
-    return json.loads(data.decode("utf-8"))
