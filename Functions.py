@@ -25,7 +25,7 @@ def save_note(new_note):
 
     try:
         with open("notes.txt", "a", encoding='utf-8') as f:
-            f.write('\n' + tmp)
+            f.write(tmp + '\n')
             print("Заметка успешно создана")
             return True
     except:
@@ -50,13 +50,11 @@ def get_notes():
 #Функция принимает в качестве аргументов список словарей и id нужного словаря. Словарь с этим id удаляет из списка.
 def del_note(notes, selected_id):
     for ind, note in enumerate(notes):
-        print("Wanted id ", selected_id)
-        print("Current note ", note)
         if note["id"] == selected_id:
-            print("Deleted note ", notes.pop(ind))
-            print("Other ", notes)
+            deleted_note = notes.pop(ind)
             save_notes(notes)
             break
+    return deleted_note
 
 
 #Принимает в качестве аргумента список словарей и записывает из в файл
