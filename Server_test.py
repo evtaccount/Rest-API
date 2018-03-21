@@ -6,9 +6,6 @@ import json
 import uuid
 import time
 
-import Classes
-import Functions
-
 
 keys = ["id", "title", "text", "date_create", "date_update"]
 

@@ -5,9 +5,6 @@ import socket
 import time
 import json
 
-import Classes
-import Functions
-
 
 #Функция принимает заданные аршументы (незаданные остаются по дефолту) и формирует строку для передаяи по сети,
 #переводя в json и кодируя
