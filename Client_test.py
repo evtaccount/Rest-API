@@ -9,9 +9,17 @@ import Classes
 import Functions
 
 
+#Функция принимает заданные аршументы (незаданные остаются по дефолту) и формирует строку для передаяи по сети,
+#переводя в json и кодируя
+def send_request(id="", title="", text="", date_create=0000000000, date_update=0000000000):
+    send_data = {"id": id, "title": title, "text": text, "date_create": date_create, "date_update": date_update}
+    data = json.dumps(send_data).encode()
+    return data
+
+
 def get_notes_from_db():
     exp_list = []
-    sock.send(Functions.send_note())
+    sock.send(send_request())
     data = sock.recv(1024).decode()
     data = json.loads(data)
 
@@ -66,7 +74,7 @@ while True:
                 if len(text_input) > 500:
                     print("Ошибка ввода. Попробуйте ещё раз\n")
 
-            sock.send(Functions.send_note(title=title_input, text=text_input))
+            sock.send(send_request(title=title_input, text=text_input))
             print("Заметка успешно создана")
 
         elif choosen_mode == 2:
@@ -75,7 +83,7 @@ while True:
         elif choosen_mode == 3:
             id_list = get_notes_from_db()
             select_note = int(input("Укажите номер заметки для удаления - "))
-            sock.send(Functions.send_note(id=id_list[select_note-1]))
+            sock.send(send_request(id=id_list[select_note-1]))
 
         elif choosen_mode == 4:
             id_list = get_notes_from_db()
@@ -84,7 +92,7 @@ while True:
             new_title = input("Введите новый заголовок")
             new_text = input("Введите новую заметку")
             print("id_list: ", id_list)
-            sock.send(Functions.send_note(id=id_list[select_note-1], title=new_title, text=new_text))
+            sock.send(send_request(id=id_list[select_note-1], title=new_title, text=new_text))
         else:
             pass
     else:
