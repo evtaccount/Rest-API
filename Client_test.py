@@ -20,7 +20,7 @@ def server_request(uuid_note="", title="", text="", date_create=0000000000, date
 def print_all(data_to_print):
     id_list = []
     if len(data_to_print) == 0:
-        print("База пуста")
+        print("Ошибка чтения, либо не сохранено ни одной заметки")
     else:
         for ind, readed_note in enumerate(data_to_print):
             print("\n", ind + 1, ". Заголовок:      ", readed_note["title"])

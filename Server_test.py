@@ -21,14 +21,15 @@ def send_answer(uuid_note="", title="", text="", date_create=0000000000, date_up
 def get_notes():
     notes = []
     current_note = {}
-    with open("notes.txt", encoding='utf-8') as f:
-        for note in f:
-            note = note.strip().split(',')
-            for n, item in enumerate(keys):
-                current_note[item] = note[n]
-            notes.append(current_note.copy())
-    print(notes)
-    return notes
+    try:
+        with open("notes.txt", encoding='utf-8') as f:
+            for note in f:
+                note = note.strip().split(',')
+                for n, item in enumerate(keys):
+                    current_note[item] = note[n]
+                notes.append(current_note.copy())
+    except:
+        return notes
 
 
 #Функция записывает новую заметку в файл. В случае успеха возвращает True; если запись не выполнена - возвращает False
@@ -95,7 +96,7 @@ def save_all(notes_to_save):
 
 
 sock = socket.socket()
-sock.bind(("", 8080))
+sock.bind(('localhost', 8080))
 sock.listen(1)
 conn, addr = sock.accept()
 print("connected:", addr)
